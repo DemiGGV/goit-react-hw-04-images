@@ -132,13 +132,11 @@ export const App = () => {
       {status === 'LOADING' && <Loader />}
       {status === 'ERROR' && toast.error(errorMessage, toastOpts)}
       {isVisibleBtn && <Button onChange={newFetchImages} />}
-      {isOpenModal && (
-        <Modal
-          image={modalImage}
-          isOpenState={isOpenModal}
-          onChange={handleModalToggle}
-        />
-      )}
+      <Modal
+        image={modalImage}
+        isOpenState={isOpenModal}
+        onChange={handleModalToggle}
+      />
       <ToastContainer />
       <GlobalStyle />
     </Section>

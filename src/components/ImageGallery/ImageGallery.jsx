@@ -6,7 +6,13 @@ export const ImageGallery = ({ imgArr, modalToggle }) => {
   return (
     <ImageGalleryS>
       {imgArr.map(image => (
-        <ImageGalleryItem key={image.id} image={image} onChange={modalToggle} />
+        <ImageGalleryItem
+          key={image.id}
+          webformatURL={image.webformatURL}
+          tags={image.tags}
+          largeImageURL={image.largeImageURL}
+          onChange={modalToggle}
+        />
       ))}
     </ImageGalleryS>
   );
