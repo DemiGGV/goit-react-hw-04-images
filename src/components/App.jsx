@@ -30,7 +30,7 @@ export const App = () => {
   const [page, setPage] = useState(1);
   const [imgArr, setImgArr] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [visibleBtn, setVisibleBtn] = useState(false);
+  const [isVisibleBtn, setIsVisibleBtn] = useState(false);
   const [status, setStatus] = useState('idle');
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalImage, setModalImage] = useState({});
@@ -46,19 +46,19 @@ export const App = () => {
     if (querry !== '' || page !== 1) {
       setStatus('loading');
       setErrorMessage(null);
-      async function getResp() {
+      const getResp = async () => {
         try {
           const resp = await fetchGetImgs(querry, page, abortController);
           console.log(resp);
           if (!resp.hits.length) {
             setStatus('idle');
             toast.warn('There nothing inside!', toastOpts);
-            setVisibleBtn(false);
+            setIsVisibleBtn(false);
             return;
           }
           const fetchArr = mappingArray(resp.hits);
           if (resp.totalHits / PER_PAGE > page) {
-            setVisibleBtn(true);
+            setIsVisibleBtn(true);
             if (page === 1)
               toast.success(
                 `We found ${resp.totalHits} images at your request`,
@@ -66,11 +66,11 @@ export const App = () => {
               );
             else
               toast.success(
-                `${resp.totalHits - (page - 1) * PER_PAGE} images`,
+                `${resp.totalHits - (page - 1) * PER_PAGE} images left`,
                 toastOpts
               );
           } else {
-            setVisibleBtn(false);
+            setIsVisibleBtn(false);
             toast.warn(
               `last page width ${
                 resp.totalHits - (page - 1) * PER_PAGE
@@ -86,7 +86,7 @@ export const App = () => {
             setErrorMessage('Bad request! Try reloading the page.');
           }
         }
-      }
+      };
       getResp();
     }
   }, [querry, page]);
@@ -130,12 +130,14 @@ export const App = () => {
       <ImageGallery imgArr={imgArr} modalToggle={handleModalToggle} />
       {status === 'loading' && <Loader />}
       {status === 'error' && toast.error(errorMessage, toastOpts)}
-      {visibleBtn && <Button onChange={newFetchImages} />}
-      <Modal
-        image={modalImage}
-        isOpenState={isOpenModal}
-        onChange={handleModalToggle}
-      />
+      {isVisibleBtn && <Button onChange={newFetchImages} />}
+      {isOpenModal && (
+        <Modal
+          image={modalImage}
+          isOpenState={isOpenModal}
+          onChange={handleModalToggle}
+        />
+      )}
       <ToastContainer />
       <GlobalStyle />
     </Section>
