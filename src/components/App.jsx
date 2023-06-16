@@ -31,7 +31,7 @@ export const App = () => {
   const [imgArr, setImgArr] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isVisibleBtn, setIsVisibleBtn] = useState(false);
-  const [status, setStatus] = useState('idle');
+  const [status, setStatus] = useState('IDLE');
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalImage, setModalImage] = useState({});
 
@@ -42,7 +42,7 @@ export const App = () => {
     abortController.current = new AbortController();
 
     if (querry !== '' || page !== 1) {
-      setStatus('loading');
+      setStatus('LOADING');
       setErrorMessage(null);
       const getResp = async () => {
         try {
@@ -52,7 +52,7 @@ export const App = () => {
             abortController.current
           );
           if (!resp.hits.length) {
-            setStatus('idle');
+            setStatus('IDLE');
             toast.warn('There nothing inside!', toastOpts);
             setIsVisibleBtn(false);
             return;
@@ -80,10 +80,10 @@ export const App = () => {
             );
           }
           setImgArr(prevArr => [...prevArr, ...fetchArr]);
-          setStatus('idle');
+          setStatus('IDLE');
         } catch (error) {
           if (error.code !== 'ERR_CANCELED') {
-            setStatus('error');
+            setStatus('ERROR');
             setErrorMessage('Bad request! Try reloading the page.');
           }
         }
@@ -129,8 +129,8 @@ export const App = () => {
       />
       <Searchbar onQuerry={handleFormQuerry} />
       <ImageGallery imgArr={imgArr} modalToggle={handleModalToggle} />
-      {status === 'loading' && <Loader />}
-      {status === 'error' && toast.error(errorMessage, toastOpts)}
+      {status === 'LOADING' && <Loader />}
+      {status === 'ERROR' && toast.error(errorMessage, toastOpts)}
       {isVisibleBtn && <Button onChange={newFetchImages} />}
       {isOpenModal && (
         <Modal
