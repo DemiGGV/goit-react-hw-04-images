@@ -25,7 +25,7 @@ const toastOpts = {
 };
 
 export const App = () => {
-  const abortController = useRef(new AbortController());
+  const abortController = useRef(null);
   const [querry, setQuerry] = useState('');
   const [page, setPage] = useState(1);
   const [imgArr, setImgArr] = useState([]);
@@ -40,15 +40,17 @@ export const App = () => {
       abortController.current.abort();
     }
     abortController.current = new AbortController();
-    // console.log(page);
-    // console.log(querry);
 
     if (querry !== '' || page !== 1) {
       setStatus('loading');
       setErrorMessage(null);
       const getResp = async () => {
         try {
-          const resp = await fetchGetImgs(querry, page, abortController);
+          const resp = await fetchGetImgs(
+            querry,
+            page,
+            abortController.current
+          );
           console.log(resp);
           if (!resp.hits.length) {
             setStatus('idle');
