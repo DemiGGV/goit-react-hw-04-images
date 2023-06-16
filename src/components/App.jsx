@@ -51,7 +51,6 @@ export const App = () => {
             page,
             abortController.current
           );
-          console.log(resp);
           if (!resp.hits.length) {
             setStatus('idle');
             toast.warn('There nothing inside!', toastOpts);
